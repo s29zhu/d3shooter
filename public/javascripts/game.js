@@ -58,6 +58,7 @@ var Shooter = function () {
 		scope.initTimer();
 		scope.initDestroyedCounter();
 		scope.initAccuracy();
+		scope.gameRunning = true;
 
 		//update time every 1 second
 		scope.timerIntervalId = setInterval(function () {
@@ -118,7 +119,7 @@ var Shooter = function () {
 		
 		clearInterval(scope.gameIntervalId);
 		clearInterval(scope.timerIntervalId)
-
+		scope.gameRunning=false;
 //		scope.canvas.append('text')
 //			.text('Game Over')
 //			.classed('game-over', true)
@@ -149,7 +150,7 @@ var Shooter = function () {
 	};
 	
 	scope.restart = function(){
-		
+		scope.gameRunning=true;
 	};
 	
 	scope.gameover = function () {

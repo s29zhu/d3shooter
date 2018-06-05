@@ -179,8 +179,9 @@ var Cannon = function (params) {
 				.delay(250)
 				.duration(200)
 					.style("opacity", 1);
-
-		scope.shooter.updateAccuracy({ fire: true });
+		if (scope.shooter.gameRunning){
+			scope.shooter.updateAccuracy({ fire: true });
+		}
 	};
 
 	scope.left = function () {

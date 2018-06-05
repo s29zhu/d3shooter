@@ -111,9 +111,10 @@ var Enemy = function (params) {
 								.style('opacity', 0)
 								.style('font-size', 45)
 								.remove();
-
-						scope.shooter.updateScore(damage);
-						scope.shooter.updateAccuracy({ hit: true });
+						if(scope.shooter.gameRunning) {
+							scope.shooter.updateScore(damage);
+							scope.shooter.updateAccuracy({ hit: true });
+						}						
 
 						lives = parseInt(scope.enemy.attr('lives'), 10) - damage;
 						scope.enemy.attr('lives', lives);
@@ -128,8 +129,9 @@ var Enemy = function (params) {
 								.duration(600)
 									.style('opacity', 0.1)
 									.remove();
-
-							scope.shooter.updateDestroyedCounter();
+							if(scope.shooter.gameRunning) {
+								scope.shooter.updateDestroyedCounter();
+							}
 						}
 					}
 				});
@@ -140,7 +142,7 @@ var Enemy = function (params) {
 
 			clearInterval(scope.enemy.intervalId);
 
-			if (lives > 0) {
+			if (lives > 0 && scope.gamePause == false) {
 				scope.shooter.updateHealth(lives);
 			}
 		}, t);
