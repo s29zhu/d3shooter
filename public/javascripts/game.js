@@ -9,13 +9,15 @@ var Shooter = function () {
 		scope.initThemeSwitcher();
 		scope.initBackground();
 		scope.initDimensions();
-		scope.addCannon();
+		//scope.addCannon();
 
 		scope.initScore();
 		scope.initTimer();
 		scope.initDestroyedCounter();
 		scope.initAccuracy();
 		scope.initHealthbar();
+		
+		scope.cannon = new Cannon({ shooter: scope });
 		
 		d3.select('button').on('click', function () {
 			scope.start();
@@ -33,12 +35,14 @@ var Shooter = function () {
 				.attr('type', "button")
 				.attr('name', "Pause")
 				.attr('value','Pause')
+				.attr('id', 'inputbutton')
 				.on('click',function(){
-					scope.gamepause();
-					d3.select(this)
-						.transition()
-						.remove();
-					
+					if(scope.gameRunning){
+						scope.gamepause();
+					}else{
+						scope.gameresume();
+					}
+									
 				})
 				
 		
@@ -60,6 +64,8 @@ var Shooter = function () {
 		scope.initAccuracy();
 		scope.gameRunning = true;
 
+		d3.select(".main")
+			.on("click", scope.cannon.fire)
 		//update time every 1 second
 		scope.timerIntervalId = setInterval(function () {
 			var value;
@@ -111,7 +117,7 @@ var Shooter = function () {
 
 		healthLabel.text('100%');
 
-		scope.addEnemy();
+		scope.enemy = new Enemy({ shooter: scope });
 		scope.scheduleNewEnemy();
 	};
 	
@@ -119,17 +125,13 @@ var Shooter = function () {
 		
 		clearInterval(scope.gameIntervalId);
 		clearInterval(scope.timerIntervalId)
-		scope.gameRunning=false;
-//		scope.canvas.append('text')
-//			.text('Game Over')
-//			.classed('game-over', true)
-//			.attr('x', scope.width / 2)
-//			.attr('y', scope.height / 3)
-//			.transition()
-//			.duration(3000)
-//				.style('opacity', 1)
-//				.style('font-size', 45);
 		
+		scope.gameRunning=false;
+		
+		//disable cannon fire 
+		d3.select(".main")
+			.on("click", null);
+
 		scope.game.selectAll('g')
 			.transition()
 			.duration(2000)
@@ -147,10 +149,31 @@ var Shooter = function () {
 //			.duration(600)
 //				.style('height', '320px')
 //				.style('opacity', 1);
+		d3.select('#inputbutton')
+			.transition()
+			.duration(1000)
+			.attr('name', 'Resume')
+			.attr('value', 'Resume');
 	};
 	
-	scope.restart = function(){
+	scope.gameresume = function(){
 		scope.gameRunning=true;
+		
+		//change the button name
+		d3.select('#inputbutton')
+		.transition()
+		.duration(1000)
+		.attr('name', 'Pause')
+		.attr('value', 'Pause');
+		
+		//resume the toolbar
+		
+		
+		//resume the cannon fire capability
+		
+		
+		//resume enemies
+		
 	};
 	
 	scope.gameover = function () {
@@ -436,11 +459,11 @@ var Shooter = function () {
 	};
 
 	scope.addCannon = function () {
-		new Cannon({ shooter: scope });
+		scope.cannon = new Cannon({ shooter: scope });
 	};
 
 	scope.addEnemy = function () {
-		new Enemy({ shooter: scope });
+		scope.enemy = new Enemy({ shooter: scope });
 	};
 
 	//release enemies every scope.T time
