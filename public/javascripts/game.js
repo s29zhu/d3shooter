@@ -1,4 +1,5 @@
 var Shooter = function () {
+	
 	var scope = this;
 	
 	d3.xml('/images/explosion.svg', function (xml) {
@@ -26,10 +27,26 @@ var Shooter = function () {
 				.duration(600)
 					.style('height', '0px')
 					.style('opacity', 0.1);
+			
+			d3.select('.toolbar')
+				.append('input')
+				.attr('type', "button")
+				.attr('name', "Pause")
+				.attr('value','Pause')
+				.on('click',function(){
+					scope.gamepause();
+					d3.select(this)
+						.transition()
+						.remove();
+					
+				})
+				
+		
 		});
 	});
 
 	scope.start = function () {
+		
 		var healthBar,
 			healthLabel;
 
@@ -42,16 +59,19 @@ var Shooter = function () {
 		scope.initDestroyedCounter();
 		scope.initAccuracy();
 
+		//update time every 1 second
 		scope.timerIntervalId = setInterval(function () {
 			var value;
 
 			scope.updateCounter(scope.timer, 1);
 			value = scope.timer.attr('value');
 
+			//release more enemies when the timer is multiples of 5
 			if (value % 5 === 0) {
 				scope.T -= 50;
 			}
-
+			
+			//
 			value = parseInt(scope.healthContaner.attr('health'), 10);
 			if (value + 1 < 370) {
 				scope.updateHealth(-1);
@@ -59,7 +79,7 @@ var Shooter = function () {
 
 		}, 1000);
 
-		scope.healthContaner.attr('health', 370)
+		scope.healthContaner.attr('health', 370);
 		healthBar = scope.healthContaner.select('.bar-health');
 
 		if (!healthBar.node()) {
@@ -93,7 +113,45 @@ var Shooter = function () {
 		scope.addEnemy();
 		scope.scheduleNewEnemy();
 	};
+	
+	scope.gamepause = function () {
+		
+		clearInterval(scope.gameIntervalId);
+		clearInterval(scope.timerIntervalId)
 
+//		scope.canvas.append('text')
+//			.text('Game Over')
+//			.classed('game-over', true)
+//			.attr('x', scope.width / 2)
+//			.attr('y', scope.height / 3)
+//			.transition()
+//			.duration(3000)
+//				.style('opacity', 1)
+//				.style('font-size', 45);
+		
+		scope.game.selectAll('g')
+			.transition()
+			.duration(2000)
+			.each(function () {
+				var node = d3.select(this);
+
+				clearInterval(node.attr('intervalId'));
+				clearTimeout(node.attr('killSwitchId'));
+			});
+//			.style('opacity', 0)
+//			.remove();
+
+//		d3.select('.modal')
+//			.transition()
+//			.duration(600)
+//				.style('height', '320px')
+//				.style('opacity', 1);
+	};
+	
+	scope.restart = function(){
+		
+	};
+	
 	scope.gameover = function () {
 		clearInterval(scope.gameIntervalId);
 		clearInterval(scope.timerIntervalId)
@@ -151,6 +209,7 @@ var Shooter = function () {
 		scope.height = clientRect.height;
 	};
 
+	//release background dots or stars every 0.5 seconds
 	scope.initBackground = function () {
 		setInterval(function () {
 			var x = Math.floor(Math.random() * scope.width);
@@ -383,6 +442,7 @@ var Shooter = function () {
 		new Enemy({ shooter: scope });
 	};
 
+	//release enemies every scope.T time
 	scope.scheduleNewEnemy = function () {
 		scope.gameIntervalId = setTimeout(function () {
 			scope.addEnemy();
