@@ -9,6 +9,7 @@ var Enemy = function (params) {
 	scope.explosion = scope.shooter.explosion;
 
 	scope.initEnemy = function () {
+		
 		var cxStart = scope.randomX(),
 			cxEnd = scope.randomX(),
 			data = scope.randomData(),
@@ -27,17 +28,29 @@ var Enemy = function (params) {
 			.duration(t)
 				.ease('linear')
 				.attr('transform', 'translate(' + [cxEnd, scope.height + bigR] + ')')
+				.attr('cxEnd', cxEnd) 
+				.each("end", function(){  // at the end of the path, decrease health, clear the time interval
+					var lives = scope.enemy.attr('lives');
+
+					clearInterval(scope.enemy.intervalId);
+
+					if (lives > 0 && scope.shooter.gameRunning) {
+						scope.shooter.updateHealth(lives);
+					}
+				})
 				.remove();
 		
 		//append a big circle
 		scope.enemy.append('circle')
 			.classed('lg', true)
 			.attr('r', bigR);
+		
 		//apend a small circle
 		scope.enemy.append('circle')
 			.classed('sm', true)
 			.attr('r', smallR);
 
+		//check if there is rocket hits the enemy
 		scope.enemy.intervalId = setInterval(function () {
 			var r, x, y, width, height, enemyBody, clientRect, rockets;
 			
@@ -141,15 +154,16 @@ var Enemy = function (params) {
 			}
 		}, 30);
 
-		scope.enemy.killSwitchId = setTimeout(function () {
-			var lives = scope.enemy.attr('lives');
-
-			clearInterval(scope.enemy.intervalId);
-
-			if (lives > 0 && scope.shooter.gameRunning) {
-				scope.shooter.updateHealth(lives);
-			}
-		}, t);
+//		//after t time, if the enemy still exist, decrease health
+//		scope.enemy.killSwitchId = setTimeout(function () {
+//			var lives = scope.enemy.attr('lives');
+//
+//			clearInterval(scope.enemy.intervalId);
+//
+//			if (lives > 0 && scope.shooter.gameRunning) {
+//				scope.shooter.updateHealth(lives);
+//			}
+//		}, t);
 
 		scope.enemy
 			.attr('intervalId', scope.enemy.intervalId)

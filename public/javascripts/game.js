@@ -134,7 +134,7 @@ var Shooter = function () {
 		d3.select(".main")
 			.on("click", null);
 
-		//frozen existing enemy
+		//pause existing enemy
 		scope.game.selectAll('g')
 			.transition()
 			.duration(2000);
@@ -165,12 +165,19 @@ var Shooter = function () {
 		scope.game.selectAll('g')
 			.each(function(){
 				var node = d3.select(this);
-				console.log(node);
+				console.log(node.attr('transform'));
 				node.transition()
 					.duration(1000)
 					.ease('linear')
-					.attr('transform', 'translate(' + [100, scope.height + 50] + ')') //NOTE: needs to update the end point
-					.remove();
+					.attr('transform', 
+							'translate('
+							+ node.attr('cxEnd')
+							+ ","
+							+ (scope.height + parseInt(node.select('circle').attr('r')))
+							+ ")") ;
+				//	.remove();
+				console.log(node.attr('transform'));
+
 			});
 		//resume rockets on the fly
 		
