@@ -69,20 +69,23 @@ var Shooter = function () {
 		//update time every 1 second
 		scope.timerIntervalId = setInterval(function () {
 			var value;
-
-			scope.updateCounter(scope.timer, 1);
-			value = scope.timer.attr('value');
-
-			//release more enemies when the timer is multiples of 5
-			if (value % 5 === 0) {
-				scope.T -= 50;
-			}
 			
-			//
-			value = parseInt(scope.healthContaner.attr('health'), 10);
-			if (value + 1 < 370) {
-				scope.updateHealth(-1);
-			}
+			//only update the timer when the game status is running. If game is paused, do not update the timer
+			if(scope.gameRunning){
+				scope.updateCounter(scope.timer, 1);
+				value = scope.timer.attr('value');
+
+				//release more enemies when the timer is multiples of 5
+				if (value % 5 === 0) {
+					scope.T -= 50;
+				}
+				
+				//every second, the health increase 1
+				value = parseInt(scope.healthContaner.attr('health'), 10); // parse the string to integer
+				if (value + 1 < 370) {
+					scope.updateHealth(-1);
+				}
+			}		
 
 		}, 1000);
 
@@ -124,7 +127,6 @@ var Shooter = function () {
 	scope.gamepause = function () {
 		
 		clearInterval(scope.gameIntervalId);
-		clearInterval(scope.timerIntervalId)
 		
 		scope.gameRunning=false;
 		
@@ -132,23 +134,11 @@ var Shooter = function () {
 		d3.select(".main")
 			.on("click", null);
 
+		//frozen existing enemy
 		scope.game.selectAll('g')
 			.transition()
-			.duration(2000)
-			.each(function () {
-				var node = d3.select(this);
+			.duration(2000);
 
-				clearInterval(node.attr('intervalId'));
-				clearTimeout(node.attr('killSwitchId'));
-			});
-//			.style('opacity', 0)
-//			.remove();
-
-//		d3.select('.modal')
-//			.transition()
-//			.duration(600)
-//				.style('height', '320px')
-//				.style('opacity', 1);
 		d3.select('#inputbutton')
 			.transition()
 			.duration(1000)
@@ -157,22 +147,36 @@ var Shooter = function () {
 	};
 	
 	scope.gameresume = function(){
+		
 		scope.gameRunning=true;
 		
 		//change the button name
 		d3.select('#inputbutton')
-		.transition()
-		.duration(1000)
-		.attr('name', 'Pause')
-		.attr('value', 'Pause');
-		
-		//resume the toolbar
-		
+			.transition()
+			.duration(1000)
+			.attr('name', 'Pause')
+			.attr('value', 'Pause'); 
 		
 		//resume the cannon fire capability
+		d3.select(".main")
+			.on('click', scope.cannon.fire);
 		
+		//resume existing enemies, g's intervalId and killSwitchId
+		scope.game.selectAll('g')
+			.each(function(){
+				var node = d3.select(this);
+				console.log(node);
+				node.transition()
+					.duration(1000)
+					.ease('linear')
+					.attr('transform', 'translate(' + [100, scope.height + 50] + ')') //NOTE: needs to update the end point
+					.remove();
+			});
+		//resume rockets on the fly
 		
-		//resume enemies
+		//add and resume new enemies
+		scope.addEnemy();
+		scope.scheduleNewEnemy();
 		
 	};
 	
@@ -180,6 +184,8 @@ var Shooter = function () {
 		clearInterval(scope.gameIntervalId);
 		clearInterval(scope.timerIntervalId)
 
+		scope.gameRunning = false;
+		
 		scope.canvas.append('text')
 			.text('Game Over')
 			.classed('game-over', true)
@@ -189,6 +195,11 @@ var Shooter = function () {
 			.duration(3000)
 				.style('opacity', 1)
 				.style('font-size', 45);
+		
+		d3.select('#inputbutton')
+			.transition()
+			.duration(10)
+			.remove();
 		
 		scope.game.selectAll('g')
 			.transition()

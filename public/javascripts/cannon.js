@@ -131,7 +131,7 @@ var Cannon = function (params) {
 					.style("opacity", 0)
 					.remove();
 
-		rocket = scope.plane.select("#rocket-" + scope.rocketId)
+		fire = scope.plane.select("#rocket-" + scope.rocketId)
 			.style("opacity", 0)
 			.transition()
 			.duration(0)

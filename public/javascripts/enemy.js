@@ -21,17 +21,19 @@ var Enemy = function (params) {
 			.attr('lives', data.lives)
 			.attr('transform', 'translate(' + [cxStart, -bigR] + ')');
 		
+		//define enemy's moving path		
 		scope.enemy
 			.transition()
 			.duration(t)
 				.ease('linear')
 				.attr('transform', 'translate(' + [cxEnd, scope.height + bigR] + ')')
 				.remove();
-
+		
+		//append a big circle
 		scope.enemy.append('circle')
 			.classed('lg', true)
 			.attr('r', bigR);
-
+		//apend a small circle
 		scope.enemy.append('circle')
 			.classed('sm', true)
 			.attr('r', smallR);
@@ -45,96 +47,98 @@ var Enemy = function (params) {
 			y = clientRect.top;
 			width = clientRect.width;
 			height = clientRect.height;
-
-			rockets = scope.canvas.selectAll('.rocket.active')
-				.each(function () {
-					var rocket = d3.select(this),
-						clientRect = rocket.select('.rocket-body').node().getBoundingClientRect();
-					
-					var lives,
-						damage,
-						explosion;
-
-					if (clientRect.left >= x &&
-						clientRect.left <= x + width &&
-						clientRect.top >= y &&
-						clientRect.top <= y + height) {
-
-						rocket
-							.transition()
-							.duration(0);
+			
+			if(scope.shooter.gameRunning){
+				rockets = scope.canvas.selectAll('.rocket.active')
+					.each(function () {
+						var rocket = d3.select(this),
+							clientRect = rocket.select('.rocket-body').node().getBoundingClientRect();
 						
-						rocket.remove();
-
-						scope.canvas.append('circle')
-							.attr('cx', clientRect.left)
-							.attr('cy', clientRect.top)
-							.attr('r', '5')
-							.style('fill', 'rgba(0,0,0,0.1)')
+						var lives,
+							damage,
+							explosion;
+	
+						if (clientRect.left >= x &&
+							clientRect.left <= x + width &&
+							clientRect.top >= y &&
+							clientRect.top <= y + height) {
+	
+							rocket
 								.transition()
-								.duration(600)
-									.attr('r', 35)
-									.style('opacity', 0.15)
+								.duration(0);
+							
+							rocket.remove();
+	
+							//create the click circle
+							scope.canvas.append('circle')
+								.attr('cx', clientRect.left)
+								.attr('cy', clientRect.top)
+								.attr('r', '5')
+								.style('fill', 'rgba(0,0,0,0.1)')
+									.transition()
+									.duration(600)
+										.attr('r', 35)
+										.style('opacity', 0.15)
+										.remove();
+	
+							explosion = d3.select(scope.explosion).select('#Page-1');
+	
+							explosion = scope.canvas.node()
+								.appendChild(explosion.node().cloneNode(true));
+	
+							explosion = d3.select(explosion);
+	
+							explosion
+								.attr('transform', 'translate(' +
+									[clientRect.left - 10, clientRect.top - 10] +')')
+								.style('opacity', 0)
+								.transition()
+								.duration(200)
+									.style('opacity', 1);
+	
+							explosion
+								.transition()
+								.delay(200)
+								.duration(500)
+									.style('opacity', 0)
 									.remove();
-
-						explosion = d3.select(scope.explosion).select('#Page-1');
-
-						explosion = scope.canvas.node()
-							.appendChild(explosion.node().cloneNode(true));
-
-						explosion = d3.select(explosion);
-
-						explosion
-							.attr('transform', 'translate(' +
-								[clientRect.left - 10, clientRect.top - 10] +')')
-							.style('opacity', 0)
-							.transition()
-							.duration(200)
-								.style('opacity', 1);
-
-						explosion
-							.transition()
-							.delay(200)
-							.duration(500)
-								.style('opacity', 0)
-								.remove();
-
-						damage = Math.round(Math.random() * 12 + 25);
-
-						scope.canvas.append('text')
-							.text(damage)
-							.attr('x', clientRect.left + 10)
-							.attr('y', clientRect.top - 5)
-							.style('font-size', 20)
-							.transition()
-							.duration(1000)
-								.style('opacity', 0)
-								.style('font-size', 45)
-								.remove();
-						if(scope.shooter.gameRunning) {
-							scope.shooter.updateScore(damage);
-							scope.shooter.updateAccuracy({ hit: true });
-						}						
-
-						lives = parseInt(scope.enemy.attr('lives'), 10) - damage;
-						scope.enemy.attr('lives', lives);
-
-						if (lives <= 0) {
-							scope.enemy.transition().duration(0);
-							clearInterval(scope.enemy.intervalId);
-							clearTimeout(scope.enemy.killSwitchId);
-
-							scope.enemy
+	
+							damage = Math.round(Math.random() * 12 + 25);
+	
+							scope.canvas.append('text')
+								.text(damage)
+								.attr('x', clientRect.left + 10)
+								.attr('y', clientRect.top - 5)
+								.style('font-size', 20)
 								.transition()
-								.duration(600)
-									.style('opacity', 0.1)
+								.duration(1000)
+									.style('opacity', 0)
+									.style('font-size', 45)
 									.remove();
 							if(scope.shooter.gameRunning) {
+								scope.shooter.updateScore(damage);
+								scope.shooter.updateAccuracy({ hit: true });
+							}						
+	
+							lives = parseInt(scope.enemy.attr('lives'), 10) - damage;
+							scope.enemy.attr('lives', lives);
+	
+							if (lives <= 0 && scope.shooter.gameRunning) {
+								scope.enemy.transition().duration(0);
+								clearInterval(scope.enemy.intervalId);
+								clearTimeout(scope.enemy.killSwitchId);
+	
+								scope.enemy
+									.transition()
+									.duration(600)
+										.style('opacity', 0.1)
+										.remove();
 								scope.shooter.updateDestroyedCounter();
+								
 							}
 						}
-					}
-				});
+					});
+			}
 		}, 30);
 
 		scope.enemy.killSwitchId = setTimeout(function () {
@@ -142,7 +146,7 @@ var Enemy = function (params) {
 
 			clearInterval(scope.enemy.intervalId);
 
-			if (lives > 0 && scope.gamePause == false) {
+			if (lives > 0 && scope.shooter.gameRunning) {
 				scope.shooter.updateHealth(lives);
 			}
 		}, t);
