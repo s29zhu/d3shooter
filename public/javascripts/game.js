@@ -163,28 +163,41 @@ var Shooter = function () {
 		
 		//resume existing enemies, g's intervalId and killSwitchId
 		scope.game.selectAll('g')
+			.transition()
 			.each(function(){
 				var node = d3.select(this);
-				console.log(node.attr('transform'));
-				node.transition()
-					.duration(1000)
-					.ease('linear')
-					.attr('transform', 
-							'translate('
-							+ node.attr('cxEnd')
-							+ ","
-							+ (scope.height + parseInt(node.select('circle').attr('r')))
-							+ ")") ;
-				//	.remove();
-				console.log(node.attr('transform'));
-
-			});
+				if(node.attr('class').includes('enemy')){
+					var time = node.attr('time')*(1 - node.attr('T'));
+					//console.log('intervalId' + node.attr('intervalId')+":"+'time'+ node.attr('time') + ": T" + node.attr('T'));
+					node.attr('time', time)
+						.attr('T', 0);				
+					node.transition()
+						.duration(time)
+						.ease('linear')
+						.attr('T', 1)
+						.attr('transform', 
+								'translate('
+								+ node.attr('cxEnd')
+								+ ","
+								+ (scope.height + parseInt(node.select('circle').attr('r')))
+								+ ")")
+						.each("end", function(){  // at the end of the path, decrease health, clear the time interval
+							var lives = node.attr('lives');	
+							clearInterval(node.intervalId);	
+							if (lives > 0 && scope.gameRunning) {
+								scope.updateHealth(lives);
+							}						
+						})
+						.remove();						
+				} else if (node.attr('class').includes('rocket')){
+					
+				}
+		});
 		//resume rockets on the fly
 		
-		//add and resume new enemies
+		//add and resume new enemies, NOTE: introduce bugs of adding too many enemies
 		scope.addEnemy();
 		scope.scheduleNewEnemy();
-		
 	};
 	
 	scope.gameover = function () {

@@ -22,12 +22,16 @@ var Enemy = function (params) {
 			.attr('lives', data.lives)
 			.attr('transform', 'translate(' + [cxStart, -bigR] + ')');
 		
-		//define enemy's moving path		
+		//define enemy's moving path	
+		scope.enemy.attr('T',0)
+			.attr("time", t);		
+		
 		scope.enemy
 			.transition()
 			.duration(t)
 				.ease('linear')
 				.attr('transform', 'translate(' + [cxEnd, scope.height + bigR] + ')')
+				.attr('T', 1)
 				.attr('cxEnd', cxEnd) 
 				.each("end", function(){  // at the end of the path, decrease health, clear the time interval
 					var lives = scope.enemy.attr('lives');
@@ -38,7 +42,7 @@ var Enemy = function (params) {
 						scope.shooter.updateHealth(lives);
 					}
 				})
-				.remove();
+			.remove();
 		
 		//append a big circle
 		scope.enemy.append('circle')
