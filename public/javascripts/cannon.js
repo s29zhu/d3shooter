@@ -116,7 +116,8 @@ var Cannon = function (params) {
 
 		mouse = d3.mouse(this);
 		coord = scope.warheadCoord();
-
+		
+		// mouse click effect
 		scope.canvas.append("circle")
 			.attr("r", 10)
 			.attr("cx", mouse[0])
@@ -131,6 +132,7 @@ var Cannon = function (params) {
 					.style("opacity", 0)
 					.remove();
 
+		// select rocket on the cannon
 		rocket = scope.plane.select("#rocket-" + scope.rocketId)
 			.style("opacity", 0)
 			.transition()
@@ -138,16 +140,14 @@ var Cannon = function (params) {
 			.delay(1000)
 				.style("opacity", 1);
 
-		scope.rocketId++;
-		if (scope.rocketId === 5) {
-			scope.rocketId = 1;
-		}
+		scope.rocketId = (scope.rocketId + 1) % 4 + 1;
 
 		clientRect = rocket.select(".rocket-body").node().getBoundingClientRect();
 		angle = scope.convertAngle();
 		dx = clientRect.height * Math.cos(angle);
 		dy = clientRect.height * Math.sin(angle);
 
+		// append rocket to game node list
 		rocket = scope.game.node()
 			.appendChild(rocket.node().cloneNode(true));
 
@@ -155,6 +155,7 @@ var Cannon = function (params) {
 			.classed('active', true)
 			.style("opacity", 1)
 
+		//prepare the rocket to be out of the cannon
 		rocket
 			.attr("transform", "translate(" +
 				[clientRect.left, clientRect.top] + ") " +
@@ -163,22 +164,34 @@ var Cannon = function (params) {
 			.duration(300)
 				.attr("transform", "translate(" + [clientRect.left + dx , clientRect.top - dy] + ")" +
 					"rotate(" + [scope.dr, clientRect.width/2, clientRect.height/2] + ")")
-
+		
+		//preserve destination 
+		rocket.attr('rotate-dr', scope.dr)
+				.attr('rotate-width', clientRect.width/2)
+				.attr('rotate-height', clientRect.height/2)
+				.attr('translate-x', coord.end[0] - clientRect.width/2 )
+				.attr('translate-y', coord.end[1] - clientRect.height/2)
+				.attr('T', 0)
+				.attr('time', coord.speed);
+				
+		// send rocket out
 		rocket
 			.transition()
 			.delay(250)
 			.duration(coord.speed)
-				.ease("quad")
+				.ease("quad") // define the path shape
 				.attr("transform", "translate(" + [coord.end[0] - clientRect.width/2 , coord.end[1] - clientRect.height/2] + ")" +
 					"rotate(" + [scope.dr, clientRect.width/2, clientRect.height/2] + ")")
+				.attr('T', 1)
 				.remove();
 
-
+		// rocket exhaust, i.e, rocket tail fire 
 		rocket.select("#exhaust")
 				.transition()
 				.delay(250)
 				.duration(200)
 					.style("opacity", 1);
+		
 		if (scope.shooter.gameRunning){
 			scope.shooter.updateAccuracy({ fire: true });
 		}

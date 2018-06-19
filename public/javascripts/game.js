@@ -166,7 +166,7 @@ var Shooter = function () {
 			.transition()
 			.each(function(){
 				var node = d3.select(this);
-				if(node.attr('class').includes('enemy')){
+				if(node.attr('class') != null && node.attr('class').includes('enemy')){
 					var time = node.attr('time')*(1 - node.attr('T'));
 					//console.log('intervalId' + node.attr('intervalId')+":"+'time'+ node.attr('time') + ": T" + node.attr('T'));
 					node.attr('time', time)
@@ -189,13 +189,24 @@ var Shooter = function () {
 							}						
 						})
 						.remove();						
-				} else if (node.attr('class').includes('rocket')){
-					
+				} 
+				// resume rockets on the fly
+				else if (node.attr('class') != null && node.attr('class').includes('rocket')){ 
+					var time = node.attr('time')*(1 - node.attr('T'));
+					node.attr('time', time)
+						.attr('T', 0);
+					node.transition()
+						.duration(time)
+						.ease('quad')
+						.attr('T',1)
+						.attr('transform', 'translate(' +  [node.attr('translate-x') , node.attr('translate-y')]+')'
+								+ "rotate(" + [node.attr('rotate-dr') , node.attr('rotate-width') , node.attr('rotate-height')] + ")")
+						.remove();
 				}
 		});
-		//resume rockets on the fly
 		
-		//add and resume new enemies, NOTE: introduce bugs of adding too many enemies
+		//add and resume new enemies, 
+		//NOTE: introduce bugs of adding too many enemies
 		scope.addEnemy();
 		scope.scheduleNewEnemy();
 	};
