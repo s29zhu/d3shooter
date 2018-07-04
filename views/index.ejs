@@ -9,21 +9,37 @@
         <link rel='stylesheet' href='/stylesheets/main.css' />
         <link rel='stylesheet' href='/stylesheets/game.css' />
     </head>
+    
     <body>
         <!--[if lt IE 10]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
+        
+		<div id="fb-root"></div>
+		
+		<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) return;
+			  js = d.createElement(s); js.id = id;
+			  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+		</script>
+			
         <div class="container dark">
             <div class="toolbar">
                 <div class="color-theme">
                 </div>
+				<!----facebook share button--->
+				<!---div class="fb-share-button" data-href="https://localhost:3000/" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+						<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flocalhost%3A3000%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a>
+				</div--->
 
                 <div id="score" class="element">
                     <svg width="80" height="50"></svg> 
                     <div class="caption">score</div>
                 </div>
-
+                
                 <div id="timer" class="element">
                     <svg width="80" height="50"></svg> 
                     <div class="caption">time</div>

@@ -81,8 +81,8 @@ var Cannon = function (params) {
 		d3.select("body")
 			.on("keydown", scope.keyup);
 
-//		d3.select(".main")
-//			.on("click", scope.fire)
+		d3.select(".main")
+			.on("click", scope.fire)
 	};
 
 	scope.keyup = function () {

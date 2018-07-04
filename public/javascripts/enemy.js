@@ -65,11 +65,11 @@ var Enemy = function (params) {
 			width = clientRect.width;
 			height = clientRect.height;
 			
-			if(scope.shooter.gameRunning){
+		//	if(scope.shooter.gameRunning){
 				rockets = scope.canvas.selectAll('.rocket.active')
 					.each(function () {
 						var rocket = d3.select(this),
-							clientRect = rocket.select('.rocket-body').node().getBoundingClientRect();
+						clientRect = rocket.select('.rocket-body').node().getBoundingClientRect();
 						
 						var lives,
 							damage,
@@ -132,6 +132,7 @@ var Enemy = function (params) {
 									.style('opacity', 0)
 									.style('font-size', 45)
 									.remove();
+							
 							if(scope.shooter.gameRunning) {
 								scope.shooter.updateScore(damage);
 								scope.shooter.updateAccuracy({ hit: true });
@@ -155,19 +156,19 @@ var Enemy = function (params) {
 							}
 						}
 					});
-			}
+		//	}
 		}, 30);
 
-//		//after t time, if the enemy still exist, decrease health
-//		scope.enemy.killSwitchId = setTimeout(function () {
-//			var lives = scope.enemy.attr('lives');
-//
-//			clearInterval(scope.enemy.intervalId);
-//
-//			if (lives > 0 && scope.shooter.gameRunning) {
-//				scope.shooter.updateHealth(lives);
-//			}
-//		}, t);
+		//after t time, if the enemy still exist, decrease health
+		scope.enemy.killSwitchId = setTimeout(function () {
+			var lives = scope.enemy.attr('lives');
+
+			clearInterval(scope.enemy.intervalId);
+
+			if (lives > 0 && scope.shooter.gameRunning) {
+				scope.shooter.updateHealth(lives);
+			}
+		}, t);
 
 		scope.enemy
 			.attr('intervalId', scope.enemy.intervalId)

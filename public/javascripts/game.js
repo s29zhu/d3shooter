@@ -64,6 +64,9 @@ var Shooter = function () {
 		scope.initAccuracy();
 		scope.gameRunning = true;
 
+		//console.log('begining the game : scope.score', scope.score);
+		//console.log('begining of the game : scope.destroyed', scope.destroyed);
+		
 		d3.select(".main")
 			.on("click", scope.cannon.fire)
 		//update time every 1 second
@@ -309,10 +312,13 @@ var Shooter = function () {
 
 	scope.initScore = function () {
 		scope.score = scope.initCounter('score');
+		//console.log('begining the game : scope.score', scope.score);
 	};
 
 	scope.updateScore = function (value) {
+		//console.log('scope.score2: ', scope.score, 'score value', value);
 		scope.updateCounter(scope.score, value);
+		
 	};
 
 	scope.initTimer = function () {
@@ -398,7 +404,7 @@ var Shooter = function () {
 
 	scope.initCounter = function (id) {
 		var counter = d3.select('#' + id + ' svg');
-
+		
 		var text = counter
 			.attr('value', 0)
 			.selectAll('text')
@@ -445,8 +451,10 @@ var Shooter = function () {
 			destroyed,
 			data,
 			text;
-
+		
+		//console.log('enter function updateCounter');
 		if (increment) {
+			//console.log('counter', counter);
 			currValStr = counter.attr('value');
 			currVal = parseInt(currValStr);
 
