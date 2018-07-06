@@ -86,8 +86,8 @@ var Enemy = function (params) {
 							
 							rocket.remove();
 	
-							//create the click circle
-							scope.canvas.append('circle')
+							//create the circle before explosion
+					 		scope.canvas.append('circle')
 								.attr('cx', clientRect.left)
 								.attr('cy', clientRect.top)
 								.attr('r', '5')
@@ -97,7 +97,8 @@ var Enemy = function (params) {
 										.attr('r', 35)
 										.style('opacity', 0.15)
 										.remove();
-	
+					 		
+					 		//explosion effect
 							explosion = d3.select(scope.explosion).select('#Page-1');
 	
 							explosion = scope.canvas.node()
@@ -119,19 +120,20 @@ var Enemy = function (params) {
 								.duration(500)
 									.style('opacity', 0)
 									.remove();
-	
+							// show damage numbers
 							damage = Math.round(Math.random() * 12 + 25);
-	
-							scope.canvas.append('text')
-								.text(damage)
-								.attr('x', clientRect.left + 10)
-								.attr('y', clientRect.top - 5)
-								.style('font-size', 20)
-								.transition()
-								.duration(1000)
-									.style('opacity', 0)
-									.style('font-size', 45)
-									.remove();
+							
+//							
+//							scope.canvas.append('text')
+//								.text(damage)
+//								.attr('x', clientRect.left + 10)
+//								.attr('y', clientRect.top - 5)
+//								.style('font-size', 20)
+//								.transition()
+//								.duration(1000)
+//									.style('opacity', 0)
+//									.style('font-size', 45)
+//									.remove();
 							
 							if(scope.shooter.gameRunning) {
 								scope.shooter.updateScore(damage);

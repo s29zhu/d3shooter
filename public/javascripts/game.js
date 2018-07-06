@@ -64,11 +64,9 @@ var Shooter = function () {
 		scope.initAccuracy();
 		scope.gameRunning = true;
 
-		//console.log('begining the game : scope.score', scope.score);
-		//console.log('begining of the game : scope.destroyed', scope.destroyed);
 		
 		d3.select(".main")
-			.on("click", scope.cannon.fire)
+			.on("click", scope.cannon.fire);
 		//update time every 1 second
 		scope.timerIntervalId = setInterval(function () {
 			var value;
@@ -88,6 +86,18 @@ var Shooter = function () {
 				if (value + 1 < 370) {
 					scope.updateHealth(-1);
 				}
+				
+				d3.select('.toolbar')
+				  .transition()
+				  	.duration(15)
+				  	.style('display', 'none');
+				
+//				  .on('mouseover', function() {                   
+//				      //To hide the div with id create-context-menu
+//				      d3.select('.toolbar').style('display', 'inline-block');
+//				      //OR          
+//				      //d3.select('#create-context-menu').style('opacity', 0);
+//				  });
 			}		
 
 		}, 1000);
@@ -252,6 +262,10 @@ var Shooter = function () {
 			.duration(600)
 				.style('height', '320px')
 				.style('opacity', 1);
+		
+		d3.select('.toolbar')
+		.style('display','inline-block');
+		
 	};
 
 	scope.initCanvas = function () {
