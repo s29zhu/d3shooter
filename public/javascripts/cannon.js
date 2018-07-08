@@ -1,4 +1,5 @@
 var Cannon = function (params) {
+	
 	var scope = this;
 
 	scope.shooter = params.shooter;

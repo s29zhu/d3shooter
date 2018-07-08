@@ -363,6 +363,7 @@ var Shooter = function () {
 		scope.updateCounter(scope.accuracy);
 	};
 
+	//health bar begin
 	scope.initHealthbar = function () {
 		scope.healthContaner = d3.select('.healthbar svg')
 			.attr('health', 370);
