@@ -390,31 +390,69 @@ var Shooter = function () {
 		}
 
 		percentage = d3.round(health / 370 * 100);
+		console.log('precentage', percentage);
+		
+		if(percentage > 75 && percentage < 100){
+			// three health circles
+			scope.canvas.select('#health-4')
+				.transition()
+				.duration(1000)
+					.style('fill', function(){
+						var grey = '#d8d8d8';
+						return grey;
+					});
+		} else if(percentage <= 75 && percentage > 50 ){
+			// two health circles
+			scope.canvas.select('#health-3')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#d8d8d8';
+					return grey;
+				});
+		} else if(percentage <= 50 && percentage > 25 ){
+			// one heath circle
+			scope.canvas.select('#health-2')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#d8d8d8';
+					return grey;
+				});
+		} else {
+			scope.canvas.select('#health-1')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#d8d8d8';
+					return grey;
+				});
+		}
 
 		this.healthContaner.attr('health', health);
-
-		this.healthContaner
-			.select('.bar-health')
-			.transition()
-			.duration(600)
-				.attr('width', health)
-				.style('fill', function () {
-					var red = '#d9534f',
-						orange = '#f0ad4e',
-						green = '#1ECD97';
-
-					if (percentage > 60) {
-						return green;
-					} else if (percentage > 25) {
-						return orange;
-					} else {
-						return red;
-					}
-				});
-
-		this.healthContaner
-			.select('.label')
-			.text(percentage + '%');
+//
+//		this.healthContaner
+//			.select('.bar-health')
+//			.transition()
+//			.duration(600)
+//				.attr('width', health)
+//				.style('fill', function () {
+//					var red = '#d9534f',
+//						orange = '#f0ad4e',
+//						green = '#1ECD97';
+//
+//					if (percentage > 60) {
+//						return green;
+//					} else if (percentage > 25) {
+//						return orange;
+//					} else {
+//						return red;
+//					}
+//				});
+//
+//		this.healthContaner
+//			.select('.label')
+//			.text(percentage + '%');
 	};
 
 	scope.initCounter = function (id) {

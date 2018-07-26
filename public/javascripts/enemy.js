@@ -22,7 +22,7 @@ var Enemy = function (params) {
 			.attr('lives', data.lives)
 			.attr('transform', 'translate(' + [cxStart, -bigR] + ')');
 		
-		//define enemy's moving path	
+		// define enemy's moving path	
 		scope.enemy.attr('T',0)
 			.attr("time", t);		
 		
@@ -44,18 +44,19 @@ var Enemy = function (params) {
 				})
 			.remove();
 		
-		//append a big circle
+		// append a big circle
 		scope.enemy.append('circle')
 			.classed('lg', true)
 			.attr('r', bigR);
 		
-		//apend a small circle
+		// apend a small circle
 		scope.enemy.append('circle')
 			.classed('sm', true)
 			.attr('r', smallR);
 
-		//check if there is rocket hits the enemy
+		// check if there is rocket hits the enemy
 		scope.enemy.intervalId = setInterval(function () {
+			
 			var r, x, y, width, height, enemyBody, clientRect, rockets;
 			
 			clientRect = scope.enemy.node().getBoundingClientRect();
@@ -86,7 +87,7 @@ var Enemy = function (params) {
 							
 							rocket.remove();
 	
-							//create the circle before explosion
+							// create the circle before explosion
 					 		scope.canvas.append('circle')
 								.attr('cx', clientRect.left)
 								.attr('cy', clientRect.top)
@@ -98,7 +99,7 @@ var Enemy = function (params) {
 										.style('opacity', 0.15)
 										.remove();
 					 		
-					 		//explosion effect
+					 		// explosion effect
 							explosion = d3.select(scope.explosion).select('#Page-1');
 	
 							explosion = scope.canvas.node()
@@ -121,9 +122,8 @@ var Enemy = function (params) {
 									.style('opacity', 0)
 									.remove();
 							// show damage numbers
-							damage = Math.round(Math.random() * 12 + 25);
-							
-//							
+							damage = Math.round(Math.random() * 12 + 25);							
+						
 //							scope.canvas.append('text')
 //								.text(damage)
 //								.attr('x', clientRect.left + 10)
@@ -161,7 +161,7 @@ var Enemy = function (params) {
 		//	}
 		}, 30);
 
-		//after t time, if the enemy still exist, decrease health
+		// after t time, if the enemy still exist, decrease health
 		scope.enemy.killSwitchId = setTimeout(function () {
 			var lives = scope.enemy.attr('lives');
 

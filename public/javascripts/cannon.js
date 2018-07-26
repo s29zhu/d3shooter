@@ -154,9 +154,9 @@ var Cannon = function (params) {
 
 		rocket = d3.select(rocket)
 			.classed('active', true)
-			.style("opacity", 1)
+			.style("opacity", 1);
 
-		//prepare the rocket to be out of the cannon
+		// prepare the rocket to be out of the cannon
 		rocket
 			.attr("transform", "translate(" +
 				[clientRect.left, clientRect.top] + ") " +
@@ -164,9 +164,9 @@ var Cannon = function (params) {
 			.transition()
 			.duration(300)
 				.attr("transform", "translate(" + [clientRect.left + dx , clientRect.top - dy] + ")" +
-					"rotate(" + [scope.dr, clientRect.width/2, clientRect.height/2] + ")")
+					"rotate(" + [scope.dr, clientRect.width/2, clientRect.height/2] + ")");
 		
-		//preserve destination 
+		// preserve destination 
 		rocket.attr('rotate-dr', scope.dr)
 				.attr('rotate-width', clientRect.width/2)
 				.attr('rotate-height', clientRect.height/2)
