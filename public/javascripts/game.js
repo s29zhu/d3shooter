@@ -392,7 +392,7 @@ var Shooter = function () {
 		percentage = d3.round(health / 370 * 100);
 		console.log('precentage', percentage);
 		
-		if(percentage > 75 && percentage < 100){
+		if(percentage > 70 && percentage < 100){
 			// three health circles
 			scope.canvas.select('#health-4')
 				.transition()
@@ -401,7 +401,7 @@ var Shooter = function () {
 						var grey = '#d8d8d8';
 						return grey;
 					});
-		} else if(percentage <= 75 && percentage > 50 ){
+		} else if(percentage <= 70 && percentage > 40 ){
 			// two health circles
 			scope.canvas.select('#health-3')
 			.transition()
@@ -410,13 +410,35 @@ var Shooter = function () {
 					var grey = '#d8d8d8';
 					return grey;
 				});
-		} else if(percentage <= 50 && percentage > 25 ){
+			
+			scope.canvas.select('#health-2')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#ffff66';
+					return grey;
+				});
+			scope.canvas.select('#health-1')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#ffff66';
+					return grey;
+				});
+		} else if(percentage <= 40 && percentage > 10 ){
 			// one heath circle
 			scope.canvas.select('#health-2')
 			.transition()
 			.duration(1000)
 				.style('fill', function(){
 					var grey = '#d8d8d8';
+					return grey;
+				});
+			scope.canvas.select('#health-1')
+			.transition()
+			.duration(1000)
+				.style('fill', function(){
+					var grey = '#ff4500';
 					return grey;
 				});
 		} else {
