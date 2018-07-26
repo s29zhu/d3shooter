@@ -1,0 +1,6 @@
+	deleted:    node_modules/cookie-parser/node_modules/cookie-signature/Makefile
+	deleted:    node_modules/cookie-parser/node_modules/cookie/.npmignore
+	deleted:    node_modules/express/node_modules/accepts/node_modules/negotiator/.npmignore
+	deleted:    node_modules/express/node_modules/parseurl/.npmignore
+	deleted:    node_modules/express/node_modules/vary/.npmignore
+	deleted:    npm-debug.log

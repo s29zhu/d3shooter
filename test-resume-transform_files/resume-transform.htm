@@ -1,0 +1,109 @@
+
+<!-- saved from url=(0033)http://xaedes.de/dev/transitions/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<title>Pausing and Resuming D3-Transitions</title>
+		<script type="text/javascript" src="./resume-transform_files/sizzle.js"></script>
+		<script type="text/javascript" src="./resume-transform_files/highlight.pack.js"></script>
+		<script type="text/javascript">
+			hljs.tabReplace = '    ';
+			hljs.initHighlightingOnLoad();
+		</script>
+		<script type="text/javascript" src="./resume-transform_files/d3.v3.min.js"></script>
+		<link rel="stylesheet" href="./resume-transform_files/style.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="./resume-transform_files/vs.css" type="text/css" media="screen">
+
+		<script type="text/javascript" src="./resume-transform_files/Transformation.js"></script>
+		<script type="text/javascript" src="./resume-transform_files/Main.js"></script>
+	</head>
+	<body onload="main();"><div id="i4c-draggable-container" style="position: fixed; z-index: 1499; width: 0px; height: 0px;"><div data-reactroot="" class="resolved" style="all: initial;"></div></div>
+	<div>
+		<h1>Pausing and Resuming D3-Transitions</h1>
+		Pausing and resuming of d3 - transitions is not a basic functionality provided by d3.
+		But it is possible. I'll show you how!
+		<h2>Basic Transition</h2>
+		Here is a basic transition as an example to work with:
+		<div id="transition_example" class="transition"><svg><g class="flip" transform="translate(0.5,0.5) translate(0,128) scale(1,-1) "><g class="coordsys" transform="translate(0,0) "><line class="horizontal" x1="15" x2="113" y1="15" y2="15" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="39" y2="39" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="64" y2="64" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="88" y2="88" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="113" y2="113" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="15" x2="15" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="39" x2="39" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="64" x2="64" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="88" x2="88" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="113" x2="113" stroke="#ccc"></line><line class="x-axis" x1="15" x2="113" y1="15" y2="15" stroke="black"></line><line class="y-axis" x1="15" x2="15" y1="15" y2="113" stroke="black"></line><g class="childs"></g><g class="plot"><path d="M15 15 L16 15 L17 15 L18 15 L19 15 L20 15 L21 15 L22 15 L23 15 L24 15 L25 15 L26 16 L27 16 L28 16 L29 16 L30 16 L31 17 L32 17 L33 17 L34 18 L35 18 L36 19 L37 19 L38 20 L39 21 L40 21 L41 22 L42 23 L43 24 L44 25 L45 26 L46 27 L47 29 L48 30 L49 31 L50 33 L51 34 L52 36 L53 38 L54 40 L55 42 L56 44 L57 46 L58 48 L59 50 L60 53 L61 55 L62 58 L63 61 L64 64 L65 67 L66 69 L67 72 L68 75 L69 77 L70 80 L71 82 L72 84 L73 86 L74 88 L75 90 L76 92 L77 93 L78 95 L79 96 L80 98 L81 99 L82 100 L83 101 L84 102 L85 103 L86 104 L87 105 L88 106 L89 107 L90 107 L91 108 L92 109 L93 109 L94 110 L95 110 L96 110 L97 111 L98 111 L99 111 L100 112 L101 112 L102 112 L103 112 L104 112 L105 112 L106 112 L107 112 L108 112 L109 112 L110 112 L111 112 L112 112 L113 113"></path></g><g class="object"><g class="pos" transform="translate(113,0)"><circle r="5" fill="red" cx="0" cy="113"></circle></g></g></g></g></svg><form><input type="button" value="start"><select><option>linear</option><option>quad</option><option selected="selected">cubic</option><option>sin</option><option>exp</option><option>circle</option><option>elastic</option><option>back</option><option>bounce</option></select><select><option></option><option>in</option><option>out</option><option selected="selected">in-out</option><option>out-in</option></select><select><option>500</option><option selected="selected">1000</option><option>2500</option><option>5000</option></select></form></div>
+		<br style="clear:both;">
+		Over the time the x-coordinate of the red circle advances with constant speed representing the time.
+		The y-coordinate is the value which is manipulated by the transition we want to examine.
+		<br>
+		Example code for starting the transition:
+<pre><code class="javascript" data-result="[object Object]">
+    <span class="keyword">var</span> c = d3.select(<span class="string">"circle"</span>);
+    c.attr(<span class="string">"cy"</span>,<span class="number">0</span>);
+    c.transition()
+        .duration( time )
+        .ease( ease )
+        .attr( <span class="string">"cy"</span>, <span class="number">1</span> );
+</code></pre>
+		<hr>
+		<h2>Pausing</h2>
+		The most easy part is to pause or stop a transition:
+		Select the element that does the transition and override the currently active transition with a new blank one with duration(0).
+<pre><code class="javascript" data-result="[object Object]">
+    <span class="keyword">var</span> c = d3.select(<span class="string">"circle"</span>);
+    c.transition()
+        .duration( <span class="number">0</span> );
+</code></pre>
+		<div id="transition_example_stop" class="transition"><svg><g class="flip" transform="translate(0.5,0.5) translate(0,128) scale(1,-1) "><g class="coordsys" transform="translate(0,0) "><line class="horizontal" x1="15" x2="113" y1="15" y2="15" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="39" y2="39" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="64" y2="64" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="88" y2="88" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="113" y2="113" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="15" x2="15" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="39" x2="39" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="64" x2="64" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="88" x2="88" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="113" x2="113" stroke="#ccc"></line><line class="x-axis" x1="15" x2="113" y1="15" y2="15" stroke="black"></line><line class="y-axis" x1="15" x2="15" y1="15" y2="113" stroke="black"></line><g class="childs"></g><g class="plot"><path d="M15 15 L16 15 L17 15 L18 15 L19 15 L20 15 L21 15 L22 15 L23 15 L24 15 L25 15 L26 16 L27 16 L28 16 L29 16 L30 16 L31 17 L32 17 L33 17 L34 18 L35 18 L36 19 L37 19 L38 20 L39 21 L40 21 L41 22 L42 23 L43 24 L44 25 L45 26 L46 27 L47 29 L48 30 L49 31 L50 33 L51 34 L52 36 L53 38 L54 40 L55 42 L56 44 L57 46 L58 48 L59 50 L60 53 L61 55 L62 58 L63 61 L64 64 L65 67 L66 69 L67 72 L68 75 L69 77 L70 80 L71 82 L72 84 L73 86 L74 88 L75 90 L76 92 L77 93 L78 95 L79 96 L80 98 L81 99 L82 100 L83 101 L84 102 L85 103 L86 104 L87 105 L88 106 L89 107 L90 107 L91 108 L92 109 L93 109 L94 110 L95 110 L96 110 L97 111 L98 111 L99 111 L100 112 L101 112 L102 112 L103 112 L104 112 L105 112 L106 112 L107 112 L108 112 L109 112 L110 112 L111 112 L112 112 L113 113"></path></g><g class="object"><g class="pos" transform="translate(58.806,0)"><circle r="5" fill="red" cx="0" cy="50.011332216"></circle></g></g></g></g></svg><form><input type="button" value="start"><input type="button" value="stop"><select><option>linear</option><option>quad</option><option selected="selected">cubic</option><option>sin</option><option>exp</option><option>circle</option><option>elastic</option><option>back</option><option>bounce</option></select><select><option></option><option>in</option><option>out</option><option selected="selected">in-out</option><option>out-in</option></select><select><option>500</option><option selected="selected">1000</option><option>2500</option><option>5000</option></select></form></div>
+
+		<hr>
+		<h2>Resuming</h2>
+
+		<p>But now how do we resume the recently stopped transition?
+		Obviously when we start the new transition it should only last
+		for the time the stopped one would have taken.
+		So we need to track the progression of a transition. You could
+		look up the attr() changed by the transition and calculate the
+		passed time. This may not work because the transition might
+		not be linear. </p>
+
+		<p>Personally I set an unused attribute (e.g. "T") of another element  to zero
+		at the begin and transition it linearly to one.</p>
+<pre><code class="javascript" data-result="[object Object]">
+    <span class="keyword">var</span> e = d3.select(<span class="string">"#time"</span>);
+    e.attr(<span class="string">"T"</span>,<span class="number">0</span>);
+    c.transition()
+        .duration( time )
+        .ease( <span class="string">"linear"</span> )
+        .attr(<span class="string">"T"</span>,<span class="number">1</span>);
+</code></pre>
+
+		<p>Now you can look up the progress of the transition at any time
+		and we can calculate the time that is leftover.</p>
+
+		<p>Now lets try to restart the original transition with the left duration.</p>
+
+		<div id="transition_example_stop_resume" class="transition"><svg><g class="flip" transform="translate(0.5,0.5) translate(0,128) scale(1,-1) "><g class="coordsys" transform="translate(0,0) "><line class="horizontal" x1="15" x2="113" y1="15" y2="15" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="39" y2="39" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="64" y2="64" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="88" y2="88" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="113" y2="113" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="15" x2="15" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="39" x2="39" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="64" x2="64" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="88" x2="88" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="113" x2="113" stroke="#ccc"></line><line class="x-axis" x1="15" x2="113" y1="15" y2="15" stroke="black"></line><line class="y-axis" x1="15" x2="15" y1="15" y2="113" stroke="black"></line><g class="childs"><g class="coordsys" transform="translate(74,73.9) "><line class="x-axis" x1="0" x2="39" y1="0" y2="0" stroke="black"></line><line class="y-axis" x1="0" x2="0" y1="0" y2="39" stroke="black"></line><g class="childs"></g><g class="plot"><path d="M0 0 L1 1 L2 2 L3 3 L4 4 L5 5 L6 6 L7 7 L8 8 L9 9 L10 10 L11 11 L12 12 L13 13 L14 14 L15 15 L16 16 L17 17 L18 18 L19 19 L20 20 L21 21 L22 22 L23 23 L24 24 L25 25 L26 26 L27 27 L28 28 L29 29 L30 30 L31 31 L32 32 L33 33 L34 34 L35 35 L36 36 L37 37 L38 38 L39 39"></path></g></g></g><g class="plot"><path d="M15 15 L16 16 L17 17 L18 18 L19 19 L20 20 L21 21 L22 22 L23 23 L24 24 L25 25 L26 26 L27 27 L28 28 L29 29 L30 30 L31 31 L32 32 L33 33 L34 34 L35 35 L36 36 L37 37 L38 38 L39 39 L40 40 L41 41 L42 42 L43 43 L44 44 L45 45 L46 46 L47 47 L48 48 L49 49 L50 50 L51 51 L52 52 L53 53 L54 54 L55 55 L56 56 L57 57 L58 58 L59 59 L60 60 L61 61 L62 62 L63 63 L64 64 L65 65 L66 66 L67 67 L68 68 L69 69 L70 70 L71 71 L72 72 L73 73 L74 74 L75 75 L76 76 L77 77 L78 78 L79 79 L80 80 L81 81 L82 82 L83 83 L84 84 L85 85 L86 86 L87 87 L88 88 L89 89 L90 90 L91 91 L92 92 L93 93 L94 94 L95 95 L96 96 L97 97 L98 98 L99 99 L100 100 L101 101 L102 102 L103 103 L104 104 L105 105 L106 106 L107 107 L108 108 L109 109 L110 110 L111 111 L112 112 L113 113"></path></g><g class="object"><g class="pos" transform="translate(113,0)"><circle r="5" fill="red" cx="0" cy="113"></circle></g></g></g></g><text x="130" y="120" T="1"></text></svg><form><input type="button" value="start"><input type="button" value="pause"><input type="button" value="resume"><select><option>linear</option><option>quad</option><option selected="selected">cubic</option><option>sin</option><option>exp</option><option>circle</option><option>elastic</option><option>back</option><option>bounce</option></select><select><option></option><option>in</option><option>out</option><option selected="selected">in-out</option><option>out-in</option></select><select><option>500</option><option selected="selected">1000</option><option>2500</option><option>5000</option></select></form></div>
+
+		<p>As you can see this works only for linear easing.
+		To get proper results we have to adapt the easing function.</p>
+		<p>First we map the x-coordinate from 0..1 in the resumed transition to elapsed_time..1 in the original
+		transition. Then we can pass this to the original easing function f(x). The results of this must again be
+		mapped; from f(x)..1 to 0..1.</p>
+		The following function does exactly this:
+<pre><code class="javascript" data-result="[object Object]">
+<span class="function"><span class="keyword">function</span> <span class="title">resumed_ease</span><span class="params">( ease, elapsed_time )</span> {</span>
+    <span class="keyword">var</span> y = <span class="keyword">typeof</span> ease == <span class="string">"function"</span> ? ease : d3.ease.call(d3, ease);
+    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span><span class="params">( x_resumed )</span> {</span>
+        <span class="keyword">var</span> x_original = d3.scale
+                        .linear()
+                        .domain([<span class="number">0</span>,<span class="number">1</span>])
+                        .range([elapsed_time,<span class="number">1</span>])
+                        ( x_resumed );
+        <span class="keyword">return</span> d3.scale
+                 .linear()
+                 .domain([ y(elapsed_time), <span class="number">1</span> ])
+                 .range([<span class="number">0</span>,<span class="number">1</span>])
+                 ( y ( x_original ) );
+    };
+}
+</code></pre>
+		<p>Let's see how this works:</p>
+		<div id="transition_example_stop_properresume" class="transition"><svg><g class="flip" transform="translate(0.5,0.5) translate(0,128) scale(1,-1) "><g class="coordsys" transform="translate(0,0) "><line class="horizontal" x1="15" x2="113" y1="15" y2="15" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="39" y2="39" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="64" y2="64" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="88" y2="88" stroke="#ccc"></line><line class="horizontal" x1="15" x2="113" y1="113" y2="113" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="15" x2="15" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="39" x2="39" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="64" x2="64" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="88" x2="88" stroke="#ccc"></line><line class="vertical" y1="15" y2="113" x1="113" x2="113" stroke="#ccc"></line><line class="x-axis" x1="15" x2="113" y1="15" y2="15" stroke="black"></line><line class="y-axis" x1="15" x2="15" y1="15" y2="113" stroke="black"></line><g class="childs"><g class="coordsys" transform="translate(66,64.1) "><line class="x-axis" x1="0" x2="46" y1="0" y2="0" stroke="black"></line><line class="y-axis" x1="0" x2="0" y1="0" y2="48" stroke="black"></line><g class="childs"></g><g class="plot"><path d="M0 0 L1 0 L2 0 L3 0 L4 0 L5 0 L6 0 L7 0 L8 0 L9 0 L10 0 L11 0 L12 0 L13 -1 L14 -1 L15 -1 L16 -1 L17 0 L18 0 L19 0 L20 0 L21 1 L22 1 L23 2 L24 2 L25 2 L26 2 L27 2 L28 2 L29 1 L30 -1 L31 -2 L32 -4 L33 -6 L34 -8 L35 -10 L36 -11 L37 -11 L38 -10 L39 -8 L40 -3 L41 3 L42 11 L43 21 L44 31 L45 40 L46 48"></path></g></g></g><g class="plot"><path d="M15 15 L16 23 L17 33 L18 43 L19 52 L20 60 L21 67 L22 71 L23 74 L24 75 L25 75 L26 74 L27 72 L28 70 L29 68 L30 66 L31 65 L32 63 L33 62 L34 62 L35 61 L36 61 L37 62 L38 62 L39 62 L40 63 L41 63 L42 64 L43 64 L44 64 L45 64 L46 64 L47 64 L48 64 L49 64 L50 64 L51 64 L52 64 L53 64 L54 64 L55 64 L56 64 L57 64 L58 64 L59 64 L60 64 L61 64 L62 64 L63 64 L64 64 L65 64 L66 64 L67 64 L68 64 L69 64 L70 64 L71 64 L72 64 L73 64 L74 64 L75 64 L76 64 L77 64 L78 63 L79 63 L80 63 L81 63 L82 63 L83 63 L84 63 L85 64 L86 64 L87 64 L88 65 L89 65 L90 66 L91 66 L92 66 L93 66 L94 66 L95 65 L96 64 L97 63 L98 61 L99 59 L100 57 L101 55 L102 53 L103 52 L104 52 L105 54 L106 56 L107 61 L108 67 L109 75 L110 85 L111 95 L112 104 L113 113"></path></g><g class="object"><g class="pos" transform="translate(113,0)"><circle r="5" fill="red" cx="0" cy="113"></circle></g></g></g></g><text x="130" y="120" T="1"></text></svg><form><input type="button" value="start"><input type="button" value="pause"><input type="button" value="resume"><select><option>linear</option><option>quad</option><option selected="selected">cubic</option><option>sin</option><option>exp</option><option>circle</option><option>elastic</option><option>back</option><option>bounce</option></select><select><option></option><option>in</option><option>out</option><option selected="selected">in-out</option><option>out-in</option></select><select><option>500</option><option selected="selected">1000</option><option>2500</option><option>5000</option></select></form></div>
+		<strong>Voilà!</strong>
+		<p>Now you know how to pause and resume transitions in d3! Congratulations</p>
+		<img src="./resume-transform_files/1fd26beda64349378d10a49e500a249c" width="1" height="1" alt="">
+	</div>
+	
+<div id="i4c-dialogs-container"></div></body></html>
