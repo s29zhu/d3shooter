@@ -379,77 +379,76 @@ var Shooter = function () {
 
 	scope.updateHealth = function (damage) {
 		var health,
-			percentage;
+		percentage;
 
 		health = this.healthContaner.attr('health');
 		health -= damage;
 
-		if (health < 0) {
+		if (health <= 0) {
 			health = 0;
+                        	scope.canvas.select('#health-1')
+                            .transition()
+                            .duration(1000)
+                            .style('fill', function(){
+                                var grey = '#d8d8d8';
+                                return grey;
+                            });
 			scope.gameover();
 		}
 
 		percentage = d3.round(health / 370 * 100);
 		console.log('precentage', percentage);
 		
-		if(percentage > 70 && percentage < 100){
+		if(percentage > 68 && percentage <= 100){
 			// three health circles
 			scope.canvas.select('#health-4')
 				.transition()
 				.duration(1000)
-					.style('fill', function(){
-						var grey = '#d8d8d8';
-						return grey;
-					});
-		} else if(percentage <= 70 && percentage > 40 ){
+                                 .style('fill', function(){
+                                    var grey = '#d8d8d8';
+                                    return grey;
+                                });
+		} else if(percentage <= 68 && percentage > 34 ){
 			// two health circles
 			scope.canvas.select('#health-3')
 			.transition()
 			.duration(1000)
-				.style('fill', function(){
-					var grey = '#d8d8d8';
-					return grey;
-				});
+                         .style('fill', function(){
+                            var grey = '#d8d8d8';
+                            return grey;
+			});
 			
-			scope.canvas.select('#health-2')
+			scope.canvas.select('#health-2,#health-1')
 			.transition()
 			.duration(1000)
-				.style('fill', function(){
-					var grey = '#ffff66';
-					return grey;
-				});
-			scope.canvas.select('#health-1')
-			.transition()
-			.duration(1000)
-				.style('fill', function(){
-					var grey = '#ffff66';
-					return grey;
-				});
-		} else if(percentage <= 40 && percentage > 10 ){
+			.style('fill', function(){
+                            var grey = '#ffff66';
+                            return grey;
+			});
+//			scope.canvas.select('#health-1')
+//			.transition()
+//			.duration(1000)
+//			.style('fill', function(){
+//                            var grey = '#ffff66';
+//                            return grey;
+//			});
+		} else if(percentage <= 34 && percentage > 0 ){
 			// one heath circle
 			scope.canvas.select('#health-2')
 			.transition()
 			.duration(1000)
-				.style('fill', function(){
-					var grey = '#d8d8d8';
-					return grey;
-				});
+			.style('fill', function(){
+                            var grey = '#d8d8d8';
+                            return grey;
+			});
 			scope.canvas.select('#health-1')
 			.transition()
 			.duration(1000)
-				.style('fill', function(){
-					var grey = '#ff4500';
-					return grey;
-				});
-		} else {
-			scope.canvas.select('#health-1')
-			.transition()
-			.duration(1000)
-				.style('fill', function(){
-					var grey = '#d8d8d8';
-					return grey;
-				});
-		}
+			.style('fill', function(){
+                            var grey = '#ff4500';
+                            return grey;
+                        });
+		} 
 
 		this.healthContaner.attr('health', health);
 //
